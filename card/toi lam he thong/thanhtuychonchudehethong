@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tùy chọn hành động quán rượu</title>
+    <style>
+      :root {
+        --bg-paper: #f0f0f0;
+        --bg-window: #e2e2e2;
+        --bg-panel: #f7f7f7;
+        --bg-inset: #dcdcdc;
+        --ink: #0c0c0c;
+        --ink-soft: #2b2b2b;
+        --ink-dim: #6a6a6a;
+        --border: #000000;
+        --border-light: #ffffff;
+        --shadow-hard: 2px 2px 0 #000000;
+        --shadow-soft: 1px 1px 0 #000000;
+        --accent: #000000;
+        --accent-rainbow: linear-gradient(
+          90 độ,
+          #ff3b30,
+          #ff9500,
+          #ffcc00,
+          #34c759,
+          #5ac8fa,
+          #007aff,
+          #5856d6
+        );
+        --radius-shell: 16px 12px 18px 14px;
+        --radius-card: 10px 6px 12px 8px;
+        --font-ui: 'Chicago', 'Geneva', 'Pixelated MS Sans Serif', 'MS Sans Serif', 'Courier New', monospace;
+      }
+
+      :root[data-theme='dark'] {
+        --bg-paper: #1b1b1b;
+        --bg-window: #242424;
+        --bg-panel: #2a2a2a;
+        --bg-inset: #141414;
+        --ink: #d2d2d2;
+        --ink-soft: #b0b0b0;
+        --ink-dim: #8a8a8a;
+        --border: #4a4a4a;
+        --border-light: #2f2f2f;
+        --shadow-hard: 1px 1px 0 #0a0a0a;
+        --shadow-soft: 0 0 0 #000000;
+        --accent: #dcdcdc;
+      }
+
+      * {
+        box-sizing: border-box;
+        lề: 0;
+        đệm: 0;
+      }
+
+      thân hình {
+        font-family: var(--font-ui);
+        nền: trong suốt;
+        màu: var(--ink);
+        cỡ chữ: 13px;
+        chiều cao dòng: 1.4;
+      }
+
+      #options-wrapper {
+        chiều rộng: 100%;
+        khoảng cách lề: 8px;
+      }
+
+      .options-shell {
+        đường viền: var rắn 1px(--border);
+        background: var(--bg-panel);
+        box-shadow: var(--shadow-hard);
+        bán kính viền: 0;
+        tràn: ẩn;
+      }
+
+      .options-header {
+        hiển thị: lưới;
+        grid-template-columns: auto 1fr auto;
+        khoảng cách: 8px;
+        căn chỉnh các mục: ở giữa;
+        khoảng đệm: 8px 10px;
+        background: var(--bg-window);
+        viền-dưới: 1px rắn var(--border);
+      }
+
+      .options-title {
+        cỡ chữ: 0.85rem;
+        font-weight: 700;
+        khoảng cách giữa các chữ: 1px;
+        text-transform: uppercase;
+      }
+
+      .mode-group {
+        màn hình: flex;
+        khoảng cách: 6px;
+        flex-wrap: bọc;
+      }
+
+      .mode-btn,
+      .theme-btn,
+      .collapse-btn {
+        đường viền: var rắn 1px(--border);
+        background: var(--bg-panel);
+        box-shadow: var(--shadow-hard);
+        khoảng đệm: 4px 8px;
+        cỡ chữ: 0.7rem;
+        con trỏ: con trỏ chuột;
+        màu: var(--ink);
+        font-family: var(--font-ui);
+      }
+
+      .mode-btn.active,
+      .theme-btn.active {
+        background: var(--bg-inset);
+      }
+
+      .options-body {
+        khoảng đệm: 8px 10px 12px;
+        background: var(--bg-panel);
+        tràn: ẩn;
+        chiều cao tối đa: 1200px;
+        Độ mờ: 1;
+        transition: max-height 0.28s ease, opacity 0.22s ease, padding 0.22s ease;
+      }
+
+      .options-body.is-collapsed {
+        chiều cao tối đa: 0;
+        Độ mờ: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+
+      .options-grid {
+        hiển thị: lưới;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        khoảng cách: 6px;
+      }
+
+      .option-card {
+        đường viền: var rắn 1px(--border);
+        bán kính viền: 0;
+        khoảng đệm: 8px 10px;
+        background: var(--bg-window);
+        box-shadow: var(--shadow-soft);
+        con trỏ: con trỏ chuột;
+        Hiệu ứng chuyển tiếp: nền mượt mà 0.18 giây, đổ bóng mượt mà 0.18 giây, màu viền mượt mà 0.18 giây;
+      }
+
+      .option-card:hover {
+        background: var(--bg-inset);
+        màu viền: var(--accent);
+        box-shadow: var(--shadow-hard);
+      }
+
+      .option-card:active {
+        box-shadow: inset 1px 1px 0 var(--border), var(--shadow-soft);
+      }
+
+      .option-text {
+        cỡ chữ: 0.85rem;
+        màu: var(--ink);
+      }
+
+      .option-meta {
+        lề trên: 6px;
+        cỡ chữ: 0.7rem;
+        màu: var(--ink-dim);
+      }
+
+      .collapsed-toggle {
+        màn hình: flex;
+        căn chỉnh các mục: ở giữa;
+        căn chỉnh nội dung: ở giữa;
+        khoảng cách: 6px;
+        khoảng đệm: 8px 10px;
+        con trỏ: con trỏ chuột;
+        cỡ chữ: 0.75rem;
+        màu: var(--ink);
+        background: var(--bg-window);
+        đường viền trên cùng: 1px rắn var(--border);
+        Độ mờ: 0;
+        chiều cao tối đa: 0;
+        tràn: ẩn;
+        Hiệu ứng chuyển tiếp: độ mờ 0.2s, độ mượt mà, chiều cao tối đa 0.2s;
+      }
+
+      .collapsed-toggle.is-visible {
+        Độ mờ: 1;
+        chiều cao tối đa: 48px;
+      }
+
+      .nướng {
+        lề trên: 8px;
+        cỡ chữ: 0.7rem;
+        màu: var(--ink-dim);
+      }
+
+      .ẩn giấu {
+        hiển thị: không có;
+      }
+
+      @media (max-width: 720px) {
+        .options-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="options-wrapper">
+      <div class="options-shell">
+        <div class="options-header">
+          <div class="options-title">Thêm ý kiến</div>
+          <div class="mode-group">
+            <button class="mode-btn" data-mode="send">Gửi thẳng</button>
+            <button class="mode-btn" data-mode="setinput">Nhập</button>
+            <button class="mode-btn" data-mode="append">Thêm</button>
+          </div>
+          <div class="mode-group">
+            <button class="theme-btn" id="themeToggle">Chủ đề</button>
+            <button class="collapse-btn" id="collapseToggle">Thu gọn</button>
+          </div>
+        </div>
+
+        <div class="options-body" id="optionsBody">
+          <div class="options-grid" id="optionsGrid"></div>
+          <div class="toast" id="toast"></div>
+        </div>
+
+        <div class="collapsed-toggle Hidden" id="collapsedToggle">Mở rộng tùy chọn ▼</div>
+      </div>
+    </div>
+
+    <script>
+      const STORAGE_THEME = 'system-dark-mode';
+      const STORAGE_MODE = 'action-options-mode';
+      const STORAGE_COLLAPSE = 'action-options-collapsed';
+
+      const modes = ['send', 'setinput', 'append'];
+      const modeLabels = {
+        gửi: 'Gửi thẳng',
+        thiết lập đầu vào: 'Nhập',
+        nối thêm: 'Thêm',
+      };
+
+      const optionsGrid = document.getElementById('optionsGrid');
+      const toast = document.getElementById('toast');
+      const optionsBody = document.getElementById('optionsBody');
+      const collapsedToggle = document.getElementById('collapsedToggle');
+      const collapseToggle = document.getElementById('collapseToggle');
+      const themeToggle = document.getElementById('themeToggle');
+      const modeButtons = document.querySelectorAll('.mode-btn');
+
+      hàm applyTheme(isDark) {
+        document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        themeToggle.classList.toggle('active', isDark);
+      }
+
+      hàm getTheme() {
+        return localStorage.getItem(STORAGE_THEME) === 'true';
+      }
+
+      hàm setTheme(next) {
+        localStorage.setItem(STORAGE_THEME, String(next));
+        applyTheme(next);
+      }
+
+      hàm đồng bộ ThemeFromStorage(sự kiện) {
+        if (event.key !== STORAGE_THEME) return;
+        applyTheme(event.newValue === 'true');
+      }
+
+      hàm setMode(mode) {
+        localStorage.setItem(STORAGE_MODE, mode);
+        modeButtons.forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.mode === mode);
+        });
+      }
+
+      hàm getMode() {
+        const stored = localStorage.getItem(STORAGE_MODE);
+        return modes.includes(stored) ? stored : 'send';
+      }
+
+      hàm setCollapsed(collapsed) {
+        localStorage.setItem(STORAGE_COLLAPSE, String(collapsed));
+        optionsBody.classList.toggle('is-collapsed', collapsed);
+        collapsedToggle.classList.toggle('is-visible', collapsed);
+        thu gọnToggle.textContent = thu gọn ? 'Mở rộng' : 'Thu gọn';
+      }
+
+      hàm getCollapsed() {
+        return localStorage.getItem(STORAGE_COLLAPSE) === 'true';
+      }
+
+      hàm showToast(message) {
+        toast.textContent = message;
+      }
+
+      hàm kích hoạt trả lời nhanh (văn bản) {
+        const mode = getMode();
+        nếu (typeof triggerSlash !== 'function') {
+          showToast('Không phát hiện thấy trigger');
+          trở lại;
+        }
+        nếu (chế độ === 'gửi') {
+          triggerSlash(`/send ${text}|/trigger`);
+          showToast('Đã gửi');
+          trở lại;
+        }
+        nếu (chế độ === 'setinput') {
+          triggerSlash(`/setinput ${text}`);
+          showToast('Đã điền vào ô nhập');
+          trở lại;
+        }
+        const $ = window.parent.$;
+        const currentInput = $('#send_textarea').val() || '';
+        const newInput = currentInput ? `${currentInput}\n${text}` : text;
+        triggerSlash(`/setinput ${newInput}`);
+        showToast('Đã thêm vào ô nhập');
+      }
+
+      hàm onOptionClick(option) {
+        kích hoạt trả lời nhanh (tùy chọn);
+        nếu (getMode() !== 'append') {
+          setCollapsed(true);
+        }
+      }
+
+      hàm createOptions(optionsString) {
+        optionsGrid.innerHTML = '';
+        const options = optionsString
+          .split('|')
+          .map(opt => opt.trim())
+          .filter(opt => opt.length > 0);
+
+        nếu (!options.length) {
+          const empty = document.createElement('div');
+          empty.className = 'option-card';
+          trống.innerHTML = '<div class="option-text">Tạm thời không có tùy chọn</div>';
+          optionsGrid.appendChild(empty);
+          trở lại;
+        }
+
+        tùy chọn.forEach((tùy chọn, chỉ mục) => {
+          const card = document.createElement('div');
+          card.className = 'option-card';
+          card.innerHTML = `
+            <div class="option-text">${option}</div>
+            <div class="option-meta">Tùy chọn ${index + 1}</div>
+          `;
+          card.addEventListener('click', () => onOptionClick(option));
+          optionsGrid.appendChild(card);
+        });
+      }
+
+      themeToggle.addEventListener('click', () => {
+        setTheme(!getTheme());
+      });
+
+      collapseToggle.addEventListener('click', () => {
+        setCollapsed(!getCollapsed());
+      });
+
+      collapsedToggle.addEventListener('click', () => {
+        setCollapsed(false);
+      });
+
+      modeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          setMode(btn.dataset.mode);
+        });
+      });
+
+      window.addEventListener('torage', syncThemeFromStorage);
+
+      setTimeout(function () {
+        thử {
+          const chat_message = getChatMessages(getCurrentMessageId())[0];
+          const match = chat_message.message.match(/<options>([\s\S]*?)<\/options>/);
+          const optionsText = match ? match[1] : '';
+          applyTheme(getTheme());
+          setMode(getMode());
+          setCollapsed(getCollapsed() === true ? true : false);
+          createOptions(optionsText);
+        } bắt lỗi (error) {
+          console.error('Tải tùy chọn thất bại:', error);
+          applyTheme(getTheme());
+          setMode(getMode());
+          setCollapsed(false);
+          createOptions('');
+        }
+      }, 0);
+    </script>
+  </body>
+</html>
