@@ -2075,7 +2075,7 @@ async function en(p417) {
 }
 const tn =
     "# Cập nhật nhật ký\n\n## 2.3.0\n\nCập nhật:\n1: Bây giờ có một cách viết ký tự tốt hơn nên tất cả các mẫu viết ký tự trước đây đã bị xóa.\n2: Cập nhật hướng dẫn viết bảng màu, các bạn chú ý nhé! Nó không phải là giúp bạn viết các thiết kế bảng màu mà là dạy bạn cách viết. AI chỉ đóng vai trò là “trợ lý định dạng” và “trợ lý định dạng” của bạn\n3: Cập nhật loại thẻ viết thứ hai “thiết kế ký tự dòng”. Lưu ý rằng cả hai không thể trộn lẫn! ! ! Không bao giờ trộn chúng! ! ! ! ! ! ! ! ! Chọn một! ! ! ! ! !\n4: Các mục dành cho bảng màu và thiết kế nhân vật gồm: nền tảng nhân vật, bảng màu cá tính (lưu ý! Không tự kiểm tra bảng màu và thiết kế nhân vật! Chỉ để AI kiểm tra lỗi chính tả!), ba mặt (nhớ, nếu không cần tách ký tự thì đừng bao giờ viết cứng mục này), giải thích thứ yếu\n5: Thiết kế ký tự dòng chỉ có một mục duy nhất: Thiết kế ký tự dòng\n6: Các mục trong tủ quần áo được giữ lại\n7: NSFW được đổi sang chế độ bảng màu, giới tính không còn yêu cầu hướng dẫn NSFW mặc định nữa (thực ra vẫn cần, ai biết AI ngu ngốc sẽ dùng từ gì? Yongdao??)\n8: Điều quan trọng nhất: chức năng làm đẹp giao diện người dùng đã được cập nhật đầy đủ lên phiên bản hướng dẫn của Aozora Lily. Nó không còn sử dụng tính năng thu thập $1 nữa mà sử dụng tính năng thu thập sàn trực tiếp. Sau khi thử nghiệm, none áp lực phải viết đẹp trong 3.1. Chức năng làm đẹp văn bản và nhấp để gửi được tích hợp sẵn và hỗ trợ phát miễn phí. Sau khi thử nghiệm, chỉ cần có kiến ​​thức cơ bản là có thể làm thẻ mặt trước trên một lớp không giống nhau. Bạn có thể trò chuyện, gửi tin nhắn, hiệu ứng máy in văn bản, v.v. bằng cách làm đẹp trang. Đồng thời, bạn cũng có thể nhúng các trang, v.v. (miễn là ngữ cảnh của bạn không bị lộ, bạn có thể viết)\n9: Về việc bạn có muốn làm đẹp phức tạp hay không, vì AI có thể bị thiểu năng trí tuệ nên tôi sẽ không giúp bạn giải quyết vấn đề này. Vui lòng truy cập trang web của Lily để sử dụng các chức năng nâng cao [Hướng dẫn Lily bất khả chiến bại] (https://stagedog.github.io/)\n10: Vì là bản cập nhật phiên bản riêng biệt nên các tập lệnh cài sẵn không được điều chỉnh, tức là các nút nhập phím tắt không được cập nhật. Vui lòng bật và tắt chúng theo cách thủ công cho các mục nhập chung. Máy của MVU vẫn sử dụng được bình thường.\n11: Nhớ xóa 2.2.3 gốc trước khi import\n12: Nếu bạn sử dụng các vật phẩm làm đẹp front-end, vui lòng xem hướng dẫn này: <https://discord.com/channels/1134557553011998840/1471486362036207773/1480948512974835883>## 2.2.3\n\n- Tối ưu hóa hiệu suất thường xuyên của chuỗi tư duy\n\n## 2.2.2\n\n- Làm cho dạng chuỗi suy nghĩ ổn định hơn\n\n## 2.2.1\n\n- Các vật dụng làm đẹp front-end cần phải làm lại, không nên sử dụng\n\n## 2.2.0\n\n- Việc điều chỉnh quy tắc thông thường dường như khiến một số kênh bị cắt trước đó; nếu nó vẫn bị cắt, bạn có thể thử tắt trực tiếp quy tắc thông thường.\n\n## 2.1.5\n\n- Điều chỉnh từ nhắc trên thanh trạng thái giao diện MVU\n\n## 2.1.4\n\n- Điều chỉnh các từ gợi ý thiết kế cấu trúc thay đổi để chống lãng phí trong cơ sở kiến thức gemini\n\n## 2.1.3\n\n- Điều chỉnh các từ gợi ý thiết kế cấu trúc thay đổi để chống lãng phí trong cơ sở kiến thức gemini\n\n## 2.1.2\n\n- Điều chỉnh các từ nhắc trên thanh trạng thái làm đẹp giao diện MVU\n- Điều chỉnh hướng dẫn cấu hình cho các mục EJS\n\n## 2.1.1\n\n- Đã sửa lỗi chính tả, tích cực -> tích cực\n\n## 2.1.0\n\n- Công tắc bước bây giờ sẽ bao gồm các mục tự kiểm tra cho từng chức năng. Ví dụ: nhấp vào `⇒` ở bước `📋 Worldview Collaborative Design` sẽ chuyển sang bước `🔍 Worldview Collaborative Design`\n- Nút `All Items` và `Self-Check Items` ban đầu đã bị loại bỏ và đổi thành `General Items` và `MVU Items` - Vậy muốn tự kiểm tra thì phải làm sao? Sau khi chọn chức năng từ nút, một hộp chọn khác sẽ hiện lên hỏi bạn muốn tạo nội dung tương ứng hay tự kiểm tra nội dung tương ứng. Việc chuyển đổi trực quan hơn trước.\n\n## 2.0.0\n\n- Hỗ trợ cập nhật auto. Nếu không, mỗi lần cập nhật người dùng sẽ phải đọc lại bài viết và tải xuống lại, điều này sẽ quá rắc rối.",
-  an = "[明月秋青写卡]" + (tn.match(/^##\s*(.+)\s*$/m)?.[1] ?? ""),
+  an = "【明月秋青写卡】" + (tn.match(/^##\s*(.+)\s*$/m)?.[1] ?? ""),
   rn = [
     {
       category: "Mục chung",
@@ -2393,12 +2393,10 @@ const gn = _.throttle(
   async function () {
     const v77 = await vn(),
       result28 = getScriptButtons();
-    const names1 = v77.map((p) => p.name).join(",");
-    const names2 = result28.map((p) => p.name).join(",");
-    if (names1 !== names2 && window._last_v77 !== names1) {
-      window._last_v77 = names1;
-      _n(v77);
-    }
+    _.isEqual(
+      v77.map((p) => p.name),
+      result28.map((p) => p.name),
+    ) || _n(v77);
   },
   1000,
   {
