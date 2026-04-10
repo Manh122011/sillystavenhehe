@@ -426,8 +426,8 @@ function registerUniqueInstance(featureName) {
     fn2 = () => {
       const scriptIdSet = _.get(window.parent, checkKey, new Set());
       return _($("#tavern_helper").find("div[data-script-id]").toArray())
-        .map((data) => String($(el).attr("data-script-id")))
-        .filter((data) => scriptIdSet.has(id))
+        .map((el) => String($(el).attr("data-script-id")))
+        .filter((id) => scriptIdSet.has(id))
         .last();
     };
   return (
@@ -1783,7 +1783,7 @@ function squashNearbyMessages(messages, settings) {
       a.role === b.role &&
       "string" == typeof a.content &&
       "string" == typeof b.content,
-  ).map((data) => ({
+  ).map((group) => ({
     role: group[0].role,
     content:
       1 === group.length
@@ -1866,14 +1866,14 @@ function setupMessageProcessing(settings, separators, shouldEnable) {
           section,
           ({ content: content }) =>
             "string" == typeof content && "" === content.trim(),
-        )).map((data) =>
+        )).map((msg) =>
           transformMessage(
             msg,
             ({ content: content }) =>
               _(content)
                 .split("\n")
-                .dropWhile((data) => !line.trim())
-                .dropRightWhile(($event) => !line.trim())
+                .dropWhile((line) => !line.trim())
+                .dropRightWhile((line) => !line.trim())
                 .join("\n"),
             $event,
           ),
@@ -1885,7 +1885,7 @@ function setupMessageProcessing(settings, separators, shouldEnable) {
           $event.depth_injection,
         fn8 = (injectionSettings, srcSectionIdx, dstSectionIdx) => {
           if (!injectionSettings.enabled) return;
-          const fn10 = (data) =>
+          const fn10 = (msg) =>
               !(
                 "system" !== msg.role ||
                 (aboveSettings.enabled &&
@@ -1903,14 +1903,14 @@ function setupMessageProcessing(settings, separators, shouldEnable) {
               "placeholder" === injectionSettings.type
                 ? splitSections[srcSectionIdx]
                     .filter(fn10)
-                    .map((data) => getTextContent(msg, $event))
+                    .map((msg) => getTextContent(msg, $event))
                     .join($event.delimiter.value)
                 : "";
           if (
             "placeholder" === injectionSettings.type &&
             _(splitSections)
               .flatten()
-              .some((data) =>
+              .some((msg) =>
                 getTextContent(msg, $event).includes(
                   injectionSettings.placeholder,
                 ),
@@ -1920,7 +1920,7 @@ function setupMessageProcessing(settings, separators, shouldEnable) {
           else {
             const removedSystemMsgs = _.remove(
               splitSections[srcSectionIdx],
-              (data) => "system" === msg.role,
+              (msg) => "system" === msg.role,
             );
             splitSections[dstSectionIdx] =
               dstSectionIdx < srcSectionIdx
@@ -1929,12 +1929,12 @@ function setupMessageProcessing(settings, separators, shouldEnable) {
           }
           _(splitSections)
             .flatten()
-            .filter((data) =>
+            .filter((msg) =>
               getTextContent(msg, $event).includes(
                 injectionSettings.placeholder,
               ),
             )
-            .forEach((data) => {
+            .forEach((msg) => {
               transformMessage(
                 msg,
                 ({ content: content }) =>
@@ -2175,8 +2175,8 @@ async function installMissingExtensions(extensions) {
         const response = await fetch("/api/extensions/discover");
         return response.ok
           ? (await response.json())
-              .filter((data) => "system" !== ext.type)
-              .map((data) => ext.name.replace("third-party/", ""))
+              .filter((ext) => "system" !== ext.type)
+              .map((ext) => ext.name.replace("third-party/", ""))
           : [];
       } catch (error) {
         return (console.error(error), []);
@@ -2427,12 +2427,12 @@ function cn() {
     },
   };
 }
-async function pn(data) {
-  await updatePresetWith("in_use", (data) => {
+async function pn(stepIndex) {
+  await updatePresetWith("in_use", (preset) => {
     preset.prompts
-      .filter((data) => sn.some((data) => prompt.name === stepName))
-      .forEach((data) => (prompt.enabled = !1));
-    const targetPrompt = preset.prompts.find((data) =>
+      .filter((prompt) => sn.some((stepName) => prompt.name === stepName))
+      .forEach((prompt) => (prompt.enabled = !1));
+    const targetPrompt = preset.prompts.find((prompt) =>
       prompt.name.includes(sn[stepIndex]),
     );
     return (
@@ -2448,16 +2448,16 @@ async function pn(data) {
         timeOut: 3000,
         escapeHtml: !1,
       }),
-    (data) => toastr.error("" + error, "切换功能失败"),
+    (error) => toastr.error("" + error, "切换功能失败"),
   );
 }
-function un(data) {
+function un(currentStep) {
   return {
     name: "当前：" + on(currentStep),
     function: () => {},
   };
 }
-function mn(data) {
+function mn(currentStepIndex) {
   return {
     name: "⇒",
     function:
@@ -2466,17 +2466,17 @@ function mn(data) {
         : () => {},
   };
 }
-function fn(data) {
+function fn(category) {
   return {
     name: category,
     function: async () => {
       const designList = rn
-          .filter((data) => item.category === category)
-          .map((data) => item.design),
+          .filter((item) => item.category === category)
+          .map((item) => item.design),
         selectedDesign = await triggerSlash(
           "/buttons labels=" + JSON.stringify(designList) + " 选择要开启的条目",
         ),
-        selectedEntry = rn.find((data) => item.design === selectedDesign);
+        selectedEntry = rn.find((item) => item.design === selectedDesign);
       if (!selectedEntry) return;
       let str4 = "创作";
       (selectedEntry.check &&
@@ -2487,18 +2487,18 @@ function fn(data) {
         )),
         str4 &&
           ("创作" === str4
-            ? await pn(sn.findIndex((data) => item === selectedEntry.design))
-            : await pn(sn.findIndex((data) => item === selectedEntry.check))));
+            ? await pn(sn.findIndex((item) => item === selectedEntry.design))
+            : await pn(sn.findIndex((item) => item === selectedEntry.check))));
     },
   };
 }
-function _n(data) {
-  (buttons.forEach((data) => {
+function _n(buttons) {
+  (buttons.forEach((btn) => {
     (eventClearEvent(getButtonEvent(btn.name)),
       eventOn(getButtonEvent(btn.name), btn.function));
   }),
     replaceScriptButtons(
-      buttons.map((item) => ({
+      buttons.map((btn) => ({
         name: btn.name,
         visible: !0,
       })),
@@ -2514,14 +2514,14 @@ async function vn() {
       },
     ];
   const currentPreset = getPreset("in_use"),
-    detectedStepIndex = await (async function (prompt) {
-      const activePrompt = prompt.find((data) =>
-        sn.some((data) => prompt.name === stepName && prompt.enabled),
+    detectedStepIndex = await (async function (prompts) {
+      const activePrompt = prompts.find((prompt) =>
+        sn.some((stepName) => prompt.name === stepName && prompt.enabled),
       );
       return activePrompt
         ? "🔍 一般条目泛用自查" === activePrompt.name
           ? _.get(activePrompt, "extra.current_step", 1)
-          : sn.findIndex((data) => activePrompt.name.includes(stepName))
+          : sn.findIndex((stepName) => activePrompt.name.includes(stepName))
         : 0;
     })(currentPreset.prompts);
   return [
@@ -2536,7 +2536,7 @@ async function vn() {
     fn("一般条目"),
     fn("MVU变量"),
     ((isEjsEnabled =
-      currentPreset.prompts.find((data) => "📋 EJS模板库" === prompt.name)?.[
+      currentPreset.prompts.find((prompt) => "📋 EJS模板库" === prompt.name)?.[
         "enabled"
       ] ?? !1),
     {
@@ -2544,9 +2544,9 @@ async function vn() {
       function: async () => {
         await updatePresetWith(
           "in_use",
-          (data) => (
+          (preset) => (
             (preset.prompts.find(
-              (data) => "📋 EJS模板库" === prompt.name,
+              (prompt) => "📋 EJS模板库" === prompt.name,
             ).enabled = !isEjsEnabled),
             preset
           ),
@@ -2555,7 +2555,7 @@ async function vn() {
             toastr.success(
               isEjsEnabled ? "已禁用EJS模板库" : "已启用EJS模板库",
             ),
-          (data) => toastr.error("" + error, "切换功能失败"),
+          (error) => toastr.error("" + error, "切换功能失败"),
         );
       },
     }),
@@ -2567,8 +2567,8 @@ const gn = _.throttle(
     const allExtensions = await vn(),
       scriptButtons = getScriptButtons();
     _.isEqual(
-      allExtensions.map((item) => ext.name),
-      scriptButtons.map((item) => btn.name),
+      allExtensions.map((ext) => ext.name),
+      scriptButtons.map((btn) => btn.name),
     ) || _n(allExtensions);
   },
   1000,
