@@ -431,7 +431,7 @@ function registerUniqueInstance(featureName) {
         .last();
     };
   return (
-    _.update(window.parent, checkKey, (data) =>
+    _.update(window.parent, checkKey, (existingSet) =>
       undefined === existingSet
         ? new Set([scriptId])
         : (existingSet.add(scriptId), existingSet),
@@ -442,12 +442,12 @@ function registerUniqueInstance(featureName) {
         (_.update(
           window.parent,
           checkKey,
-          (data) => (undefined !== setRef && setRef.delete(scriptId), setRef),
+          (setRef) => (undefined !== setRef && setRef.delete(scriptId), setRef),
         ),
           eventEmit(checkKey, fn2()));
       },
       getPreferredScriptId: fn2,
-      listenPreferenceState: (data) => eventOn(checkKey, callback),
+      listenPreferenceState: (callback) => eventOn(checkKey, callback),
     }
   );
 }
@@ -651,10 +651,10 @@ const Vue_ = Vue,
       {
         settings: settingsRef,
         should_enable: shouldEnableRef,
-        useEscapedNewline: (data) =>
+        useEscapedNewline: (path) =>
           Vue_.computed({
             get: () => _.get(settingsRef.value, path).replace(/\n/g, "\\n"),
-            set: (data) =>
+            set: (newValue) =>
               _.set(settingsRef.value, path, newValue.replace(/\\n/g, "\n")),
           }),
       }
@@ -671,7 +671,7 @@ const Vue_ = Vue,
     props: {
       label: {},
     },
-    setup: (data) => (_ctx, _cache) => (
+    setup: (props) => (_ctx, _cache) => (
       Vue_.openBlock(),
       Vue_.createElementBlock("div", v, [
         Vue_.createElementVNode("label", g, [
@@ -695,7 +695,7 @@ const y = b.A(h, [["__scopeId", "data-v-75b81b74"]]),
     props: {
       help: {},
     },
-    setup: (data) => (_ctx, _cache) => (
+    setup: (props) => (_ctx, _cache) => (
       Vue_.openBlock(),
       Vue_.createElementBlock("i", {
         class: "fa-solid fa-circle-question fa-sm note-link-span TR-help-icon",
@@ -735,7 +735,7 @@ const x = b.A(w, [["__scopeId", "data-v-43141e14"]]),
     props: {
       label: {},
     },
-    setup: (data) => (_ctx, _cache) => (
+    setup: (props) => (_ctx, _cache) => (
       Vue_.openBlock(),
       Vue_.createElementBlock("div", k, [
         props.label
@@ -765,7 +765,7 @@ const x = b.A(w, [["__scopeId", "data-v-43141e14"]]),
     props: {
       label: {},
     },
-    setup: (data) => (_ctx, _cache) => (
+    setup: (props) => (_ctx, _cache) => (
       Vue_.openBlock(),
       Vue_.createElementBlock("div", A, [
         Vue_.createElementVNode("div", M, [
@@ -1860,8 +1860,8 @@ function setupMessageProcessing(settings, separators, shouldEnable) {
             ...messages.slice(tailIdx + 1),
           ],
         ];
-      })(prompt, separators)?.["map"](($event) => {
-        return ((section = $event),
+      })(prompt, separators)?.["map"]((sectionItem) => {
+        return ((section = sectionItem),
         _.reject(
           section,
           ({ content: content }) =>
@@ -1875,14 +1875,14 @@ function setupMessageProcessing(settings, separators, shouldEnable) {
                 .dropWhile((line) => !line.trim())
                 .dropRightWhile((line) => !line.trim())
                 .join("\n"),
-            $event,
+            settings,
           ),
         );
         var section;
       });
       if (!splitSections) return;
       const { above: aboveSettings, below: belowSettings } =
-          $event.depth_injection,
+          settings.depth_injection,
         fn8 = (injectionSettings, srcSectionIdx, dstSectionIdx) => {
           if (!injectionSettings.enabled) return;
           const fn10 = (msg) =>
@@ -1890,12 +1890,12 @@ function setupMessageProcessing(settings, separators, shouldEnable) {
                 "system" !== msg.role ||
                 (aboveSettings.enabled &&
                   "placeholder" === aboveSettings.type &&
-                  getTextContent(msg, $event).includes(
+                  getTextContent(msg, settings).includes(
                     aboveSettings.placeholder,
                   )) ||
                 (belowSettings.enabled &&
                   "placeholder" === belowSettings.type &&
-                  getTextContent(msg, $event).includes(
+                  getTextContent(msg, settings).includes(
                     belowSettings.placeholder,
                   ))
               ),
@@ -1903,15 +1903,15 @@ function setupMessageProcessing(settings, separators, shouldEnable) {
               "placeholder" === injectionSettings.type
                 ? splitSections[srcSectionIdx]
                     .filter(fn10)
-                    .map((msg) => getTextContent(msg, $event))
-                    .join($event.delimiter.value)
+                    .map((msg) => getTextContent(msg, settings))
+                    .join(settings.delimiter.value)
                 : "";
           if (
             "placeholder" === injectionSettings.type &&
             _(splitSections)
               .flatten()
               .some((msg) =>
-                getTextContent(msg, $event).includes(
+                getTextContent(msg, settings).includes(
                   injectionSettings.placeholder,
                 ),
               )
@@ -1930,7 +1930,7 @@ function setupMessageProcessing(settings, separators, shouldEnable) {
           _(splitSections)
             .flatten()
             .filter((msg) =>
-              getTextContent(msg, $event).includes(
+              getTextContent(msg, settings).includes(
                 injectionSettings.placeholder,
               ),
             )
@@ -1942,18 +1942,18 @@ function setupMessageProcessing(settings, separators, shouldEnable) {
                     injectionSettings.placeholder,
                     placeholderContent,
                   ),
-                $event,
+                settings,
               );
             });
         };
       (fn8(aboveSettings, 1, 0), fn8(belowSettings, 2, 3));
       const [beforeHead, headToDeep, deepToTail, afterTail] = splitSections;
       let squashedMessages;
-      switch ($event.chat_history.type) {
+      switch (settings.chat_history.type) {
         case "squash_nearby":
           squashedMessages = squashNearbyMessages(
             _.concat(beforeHead, headToDeep, deepToTail, afterTail),
-            $event,
+            settings,
           );
           break;
         case "squash_into_one":
@@ -1979,7 +1979,7 @@ function setupMessageProcessing(settings, separators, shouldEnable) {
                     ),
                     user: substitudeMacros(settings.chat_history.user_suffix),
                   },
-                  fn11 = (data) =>
+                  fn11 = (msg) =>
                     transformMessage(
                       msg,
                       ({ role: role, content: content }) =>
@@ -2011,10 +2011,10 @@ function setupMessageProcessing(settings, separators, shouldEnable) {
                     }
                   ),
                 );
-              })(_.concat(headToDeep, deepToTail), $event),
+              })(_.concat(headToDeep, deepToTail), settings),
               afterTail,
             ),
-            $event,
+            settings,
           );
       }
       var promptRef, result;
@@ -2033,20 +2033,20 @@ function setupMessageProcessing(settings, separators, shouldEnable) {
   compare(getTavernVersion(), "1.13.4", ">")
     ? eventOn(tavern_events.GENERATE_AFTER_DATA, fn4)
     : eventOn(tavern_events.CHAT_COMPLETION_SETTINGS_READY, fn5);
-  const fn6 = (data) => {
-    if (!$event.stop_string || !shouldEnable()) return;
-    const stopRegex = parseStopRegex($event.stop_string, !0);
+  const fn6 = (token) => {
+    if (!settings.stop_string || !shouldEnable()) return;
+    const stopRegex = parseStopRegex(settings.stop_string, !0);
     stopRegex &&
       stopRegex.test(token.trimStart().slice(1)) &&
       SillyTavern.stopGeneration();
   };
   eventMakeFirst(tavern_events.STREAM_TOKEN_RECEIVED, fn6);
-  const fn7 = async (data) => {
-    if (!$event.stop_string || !shouldEnable()) return;
+  const fn7 = async (messageIdx) => {
+    if (!settings.stop_string || !shouldEnable()) return;
     const chatMessage = SillyTavern.chat[Number(messageIdx)],
       firstNonSpaceIdx = chatMessage.mes.search(/\S/);
     if (-1 === firstNonSpaceIdx) return;
-    const stopRegex = parseStopRegex($event.stop_string, !0);
+    const stopRegex = parseStopRegex(settings.stop_string, !0);
     if (!stopRegex) return;
     const stopIdx = chatMessage.mes
       .slice(firstNonSpaceIdx + 1)
@@ -2365,8 +2365,8 @@ const tn =
       design: "📋 EJS多阶段控制器",
     },
   ],
-  sn = rn.flatMap((data) => [entry.design, entry.check].filter(_.isString));
-function on(data) {
+  sn = rn.flatMap((entry) => [entry.design, entry.check].filter(_.isString));
+function on(currentStepIndex) {
   let currentStep = sn[currentStepIndex];
   return (
     "🔍 一般条目泛用自查" === currentStep &&
@@ -2395,7 +2395,7 @@ const ln = {
           async: !0,
           breaks: !0,
         })
-        .then((data) => {
+        .then((changelogHtml) => {
           SillyTavern.callGenericPopup(
             changelogHtml,
             SillyTavern.POPUP_TYPE.TEXT,
@@ -2614,7 +2614,7 @@ $(async () => {
           wrapperObj && (settingsStore.settings = wrapperObj),
           Vue_.watch(
             () => settingsStore.settings,
-            (data) => {
+            (newSettings) => {
               (prevPluginDestroy?.(),
                 (prevPluginDestroy = initPlugin(newSettings).destroy));
             },
@@ -2632,6 +2632,6 @@ $(async () => {
       })(m.parse({})).destroy,
     ),
     $(window).on("pagehide", () => {
-      (arr6.forEach((data) => destroyFn()), toggleMacroReplace(!0));
+      (arr6.forEach((destroyFn) => destroyFn()), toggleMacroReplace(!0));
     }));
 });
