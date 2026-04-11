@@ -7,7 +7,7 @@ import { klona } from "https://testingcf.jsdelivr.net/npm/klona/+esm";
 import { compare } from "https://testingcf.jsdelivr.net/npm/compare-versions/+esm";
 import "https://testingcf.jsdelivr.net/npm/json5/+esm";
 import "https://testingcf.jsdelivr.net/npm/jsonrepair/+esm";
-import "https://testingcf.jsdelivr.net/npm/zod/moduleId/core/+esm";
+import "https://testingcf.jsdelivr.net/npm/zod/v4/core/+esm";
 import { marked } from "https://testingcf.jsdelivr.net/npm/marked/+esm";
 var webpackModules = {
     207(module, exports, __require) {
@@ -1724,7 +1724,7 @@ function parseStopRegex(str, macros) {
   try {
     const regexMatch = str.match(/\/(.+)\/([a-z]*)/i);
     if (!regexMatch) return fn3(_.escapeRegExp(str), "i");
-    if (regexMatch[2] && !/^(?!.*?(.).*?\1)[gmixXsuUAJ]+$/.test(regexMatch[2]))
+    if (regexMatch[2] && !/^(?!.*?(.).*?\1)[gmixXsuUAJ]+$/.test(regexMatch[3]))
       return fn3(str, "i");
     let processedFlags = regexMatch[2] ?? "";
     return (
