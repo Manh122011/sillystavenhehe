@@ -2319,6 +2319,11 @@ const tn =
       design: "📌 Hướng dẫn cấu hình sách thế giới",
     },
     {
+      category: "Mục thông thường",
+      design: "📋 Làm đẹp giao diện",
+      check: "🔍 Làm đẹp Front-end",
+    },
+    {
       category: "Biến MVU",
       design: "📋 Kịch bản cấu trúc biến MVU",
       check: "🔍 Kịch bản cấu trúc biến MVU",
