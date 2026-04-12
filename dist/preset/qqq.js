@@ -558,7 +558,7 @@ const Vue_ = Vue,
             .default("double newline"),
           value: zodModule.z.string().default("\n\n"),
         })
-        .default({})
+        .prefault({})
         .transform((delimiterCfg) => {
           switch (delimiterCfg.type) {
             case "space":
@@ -589,7 +589,7 @@ const Vue_ = Vue,
                 .string()
                 .default("{{Nén tin nhắn liền kề::above_dx}}"),
             })
-            .default({}),
+            .prefault({}),
           below: zodModule.z
             .object({
               enabled: zodModule.z.boolean().default(!1),
@@ -600,9 +600,9 @@ const Vue_ = Vue,
                 .string()
                 .default("{{Nén tin nhắn liền kề::below_dx}}"),
             })
-            .default({}),
+            .prefault({}),
         })
-        .default({}),
+        .prefault({}),
       chat_history: zodModule.z
         .object({
           type: zodModule.z
@@ -624,9 +624,9 @@ const Vue_ = Vue,
             .default('<observed_piece class="Cài đặt">\n'),
           system_suffix: zodModule.z.string().default("\n</observed_piece>"),
         })
-        .default({}),
+        .prefault({}),
     })
-    .default({}),
+    .prefault({}),
   useSettingsStore = defineStore("Nén tin nhắn liền kề", () => {
     const variables = getVariables({
         type: "script",
